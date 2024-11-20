@@ -4,11 +4,14 @@
 //modern syntax
 import express from 'express';
 
+import mongoose from 'mongoose';
+
 import dotenv from 'dotenv';
 
 import { connectDB } from './config/db.js';
 
 import Product from '../models/product.model.js';//importing the model
+import { mongo } from 'mongoose';
 
 
 //use this to connect to db
@@ -50,6 +53,23 @@ app.post("/api/products", async (req, res) => {// async here means that this fun
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     } 
 });
+
+app.put("/api/products/:id", async (req, res) => {
+    const {id} = req.params;
+    const product = req.body;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(404).json({ success: false, message: 'Invalid Product ID' });
+    }
+
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(id, product, {new: true});//new: true means return the updated product  
+        res.status(200).json({ success: true, data: updatedProduct });
+    } catch (error) {
+        res.status(404).json({ success: false, message: 'Product not found' });
+    }
+});
+
 
 app.delete("/api/products/:id", async (req, res) => {
     const {id} = req.params;
