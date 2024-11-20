@@ -39,6 +39,18 @@ app.post("/api/products", async (req, res) => {// async here means that this fun
     } 
 });
 
+app.delete("/api/products/:id", async (req, res) => {
+    const {id} = req.params;
+    
+    try {
+        await Product.findByIdAndDelete(id);
+        res.status(200).json({ success: true, message: 'Product is deleted' });
+    } catch (error) {
+        res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+});//delete a product  dynamically 
+
 //to use this import dotenv from package.json
 console.log(process.env.MONGO_URI);
 
