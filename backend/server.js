@@ -16,6 +16,18 @@ dotenv.config();
 
 const app = express();
 
+app.get("/api/products", async (req, res) => {
+    try {
+        const products = await Product.find({});//find all products
+        res.status(200).json({success: true, data: products});//send the products as json
+    }catch (error) {
+        console.error("Error in getting products", error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+
+});//get all products
+
+
 //to connect to postman
 app.use(express.json());//middleware to parse json data
 
@@ -46,6 +58,7 @@ app.delete("/api/products/:id", async (req, res) => {
         await Product.findByIdAndDelete(id);
         res.status(200).json({ success: true, message: 'Product is deleted' });
     } catch (error) {
+        console.error("Error in deleting product", error.message);
         res.status(404).json({ success: false, message: 'Product not found' });
     }
 
