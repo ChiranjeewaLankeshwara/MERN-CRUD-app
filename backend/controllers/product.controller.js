@@ -20,7 +20,7 @@ export const createProduct = async (req, res) => {// async here means that this 
         return res.status(400).json({message: 'All fields are required'});
     }
 
-    const newProduct = new Product(product);
+    const newProduct = new Product(product); 
 
     try {
         await newProduct.save();//saves to db
